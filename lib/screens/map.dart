@@ -2,8 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geotracer/services/geolocator_service.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Map extends StatefulWidget {
+  final Position initPosition;
+
+  Map(this.initPosition);
   @override
   _MapState createState() => _MapState();
 }
@@ -13,35 +17,15 @@ class _MapState extends State<Map> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('hello'),
+    return Center(
+      child: GoogleMap(
+        initialCameraPosition: CameraPosition(
+          target: LatLng(widget.initPosition.latitude, widget.initPosition.longitude),
+          zoom: 18.0,
+        ),
+        mapType: MapType.satellite,
+        myLocationEnabled: true,
       ),
-      body: StreamBuilder<Position>(
-          stream: geoService.getCurrentLocation(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData)
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Center(
-                  child: Text(
-                    'Lat: ${snapshot.data.latitude}',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                ),
-                Center(
-                  child: Text(
-                    'Lng: ${snapshot.data.longitude}',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                ),
-              ],
-            );
-          }),
     );
   } //build
 } //class
