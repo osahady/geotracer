@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:geotracer/services/geolocator_service.dart';
-import 'package:provider/provider.dart';
 import './screens/map.dart';
 
 void main() {
@@ -12,21 +11,23 @@ class MyApp extends StatelessWidget {
   final geoService = GeolocatorServiceAbuAli();
   @override
   Widget build(BuildContext context) {
-    return FutureProvider(
-      create: (context) => geoService.getInitialLocation(),
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          visualDensity: VisualDensity.adaptivePlatformDensity,
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Tracing'),
         ),
-        home: Consumer<Position>(
-          builder: (context, value, child) => value != null
-              ? Map(value)
-              : Center(
-                  child: CircularProgressIndicator(),
-                ),
+        body: Center(
+          child: FutureBuilder<Position>(
+              future: geoService.getInitialLocation(),
+              builder: (context, snapshot) {
+                if (snapshot.data == null) return null;
+                if (!snapshot.hasData) {
+                  return CircularProgressIndicator();
+                }
+                return Map(snapshot.data);
+              }),
         ),
       ),
     );
-  }
-}
+  } //build
+} //calss

@@ -7,9 +7,9 @@ import 'package:geotracer/services/geolocator_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Map extends StatefulWidget {
-  final Position initPosition;
+  final Position initialPosition;
 
-  Map(this.initPosition);
+  Map(this.initialPosition);
   @override
   _MapState createState() => _MapState();
 }
@@ -31,10 +31,10 @@ class _MapState extends State<Map> {
     return Center(
       child: GoogleMap(
         initialCameraPosition: CameraPosition(
-          target: LatLng(widget.initPosition.latitude, widget.initPosition.longitude),
-          zoom: 18.0,
+          target: LatLng(widget.initialPosition.latitude, widget.initialPosition.longitude),
+          zoom: 16.0,
         ),
-        mapType: MapType.satellite,
+        mapType: MapType.normal,
         myLocationEnabled: true,
         onMapCreated: (controller) {
           _controller.complete(controller);
@@ -49,7 +49,7 @@ class _MapState extends State<Map> {
       CameraUpdate.newCameraPosition(
         CameraPosition(
           target: LatLng(position.latitude, position.longitude),
-          zoom: 18.0,
+          zoom: 16.0,
         ),
       ),
     );
